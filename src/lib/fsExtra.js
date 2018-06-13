@@ -1,6 +1,7 @@
 // Create an app
 const util = require('util');
 const fs = require('fs');
+const path = require('path');
 
 fs.readFileAsync = util.promisify(fs.readFile);
 fs.readDirAsync = util.promisify(fs.readdir);
