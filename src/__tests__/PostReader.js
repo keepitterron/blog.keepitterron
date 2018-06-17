@@ -32,6 +32,7 @@ describe('PostReader', function() {
     const result = PostReader.parseOne(postData);
     const expected = Object.assign({
       date: new Date(parsedData.data.date),
+      formattedDate: 'Jan 1, 2001',
       fileName: 'foo',
     }, parsedData);
     expect(matter).toHaveBeenCalledWith(postData.content);
