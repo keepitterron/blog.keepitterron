@@ -20,9 +20,11 @@ class PostReader {
   parseOne(post) {
     const parsed = this.matter(post.content);
     const date = new Date(parsed.data.date);
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    const formattedDate = date.toLocaleDateString('en-US', options);
     const fileName = post.file.replace('.md', '');
 
-    return Object.assign({date, fileName}, parsed);
+    return Object.assign({date, fileName, formattedDate}, parsed);
   }
 
   parseList(postList) {

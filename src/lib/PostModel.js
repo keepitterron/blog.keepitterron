@@ -13,21 +13,13 @@ class PostModel {
   }
 
   toList(posts) {
-    const postListMd = posts.map(data => {
-      const { title } = data.data;
-      const { date, fileName } = data;
-      return `- [${title}](./${fileName}) [${date}]`;
-    }).join('\n');
-
-    const title = 'Post Archive'
-    const html = this.converter.makeHtml(postListMd);
-    return { title, html };
+    return { posts };
   }
 
   toSingle(post) {
     const html = this.converter.makeHtml(post.content);
     const { title } = post.data;
-    return { title, html };
+    return { title, html, post };
   }
 }
 
