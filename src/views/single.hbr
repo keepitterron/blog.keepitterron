@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>C//S Blog &mdash; {{ title }}</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="author" content="Claudio Semeraro">
+  <meta name="description" content="Senior Frontend Developer at Usabilla">
+  <meta name="keywords" content="seniior fronted developer,javascript,js,html,css,node,react,angular,sass,less,jquery,BEM,es6">
+  <link rel="shortcut icon" href="/favicon.ico" type="image/vnd.microsoft.icon">
+
+  <!-- Google Analytics -->
+  <script>
+  window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+  ga('create', 'UA-24133188-1', 'auto');
+  ga('send', 'pageview');
+  </script>
+  <script async src='https://www.google-analytics.com/analytics.js'></script>
+  <!-- End Google Analytics -->
+
+  <style>{{{ styleRaw }}}</style>
+</head>
+
+<body>
+  {{> header}}
+  <div class="content post">
+    <h1 class="post__title">{{ title }}</h1>
+    <div class="post__content">
+      {{{ html }}}
+    </div>
+  </div>
+</body>
+
+</html>

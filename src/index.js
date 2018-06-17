@@ -1,6 +1,7 @@
 // Create an app
 const matter = require('gray-matter');
 const showdown = require('showdown');
+const uglifycss = require('uglifycss');
 const postReader = require('./lib/PostReader');
 const postModel = require('./lib/PostModel');
 const fs = require('./lib/fsExtra');
@@ -8,7 +9,9 @@ const template = require('./lib/template');
 
 const distPath = [__dirname, '../dist/'].join('/');
 const postPath = [__dirname, 'posts/'].join('/');
-const templatePath = [__dirname, 'views', 'index.html'].join('/');
+const templateListPath = [__dirname, 'views', 'list.hbr'].join('/');
+const templateSinglePath = [__dirname, 'views', 'single.hbr'].join('/');
+const cssPath = [__dirname, 'views', 'index.css'].join('/');
 
 const PostReader = new postReader(fs, matter);
 const PostModel = new postModel(showdown.Converter);
@@ -16,24 +19,40 @@ const PostModel = new postModel(showdown.Converter);
 fs.rimraf(distPath);
 fs.mkdirSync(distPath);
 
-const templateFn = template(templatePath);
+const templateFn = {
+  list: template(templateListPath),
+  single: template(templateSinglePath),
+};
 PostReader
   .getAll(postPath)
   .then(writeList)
-  .then(posts => posts.map(writeOne));
+  .then(posts => posts.map(writeSingle));
 
 function writeList(posts) {
-  const templateData = PostModel.toList(posts);
-  fs.writeFile(distPath + 'index.html', templateFn(templateData), () => {});
+  templateToFile({
+    filePath: distPath + 'index.html',
+    data: PostModel.toList(posts),
+    templateFn: templateFn.list,
+  });
   return posts;
 }
 
-function writeOne(post) {
-  const templateData = PostModel.toSingle(post);
+function writeSingle(post) {
   const path = distPath + post.fileName;
 
   fs.mkdir(path, (err) => {
     if(err) return; // TODO: handle errors
-    fs.writeFile(path + '/index.html', templateFn(templateData), () => {});
+    templateToFile({
+      filePath: path + '/index.html',
+      data: PostModel.toSingle(post),
+      templateFn: templateFn.single,
+    });
   })
+}
+
+function templateToFile({filePath, data, templateFn}) {
+  const uglifyOptions = { maxLineLen: 500, expandVars: true };
+  const styleRaw = uglifycss.processFiles([cssPath], uglifyOptions);
+  const templateData = Object.assign({}, data, {styleRaw});
+  fs.writeFile(filePath, templateFn(templateData), () => {});
 }
